@@ -109,6 +109,7 @@ input[type="text"]:focus {
     padding: 0 1.2rem;
     border-radius: 12px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 #todo-list {
@@ -116,10 +117,69 @@ input[type="text"]:focus {
 }
 
 #todo-list li {
-    padding: 0.8rem;
-    border-bottom: 1px solid #1a1a1a;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    margin-bottom: 0.8rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+#todo-list li.completed {
+    opacity: 0.5;
+}
+
+#todo-list li.completed .task-text {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+}
+
+.task-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--accent-color);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.task-checkbox:checked {
+    background-color: var(--accent-color);
+}
+
+.task-checkbox:checked::after {
+    content: "✓";
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.task-text {
+    flex-grow: 1;
+    font-size: 0.95rem;
+}
+
+.delete-btn {
+    cursor: pointer;
+    color: #ff453a;
+    padding: 5px;
+    font-size: 1.1rem;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.delete-btn:hover {
+    opacity: 1;
 }
 
 /* Schedule */

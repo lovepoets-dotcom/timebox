@@ -13,15 +13,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const startTime = 6;
     const endTime = 22;
 
-    for (let i = startTime; i <= endTime; i++) {
-        createTimeSlot(i, "00");
-        createTimeSlot(i, "30");
+    if (timeSlotsContainer.children.length === 0) {
+        for (let i = startTime; i <= endTime; i++) {
+            createTimeSlot(i, "00");
+            createTimeSlot(i, "30");
+        }
     }
 
     function createTimeSlot(hour, minute) {
         const slot = document.createElement('div');
         slot.className = 'slot';
-        
+
         const timeLabel = document.createElement('div');
         timeLabel.className = 'time-label';
         const displayHour = hour > 12 ? hour - 12 : hour;
@@ -40,25 +42,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Add Todo Functionality
-    function addTodo() {
-        const text = todoInput.value.trim();
-        if (text === '') return;
-
+    function createTodoItem(text, completed = false) {
         const li = document.createElement('li');
-        li.textContent = text;
-        
+        if (completed) li.classList.add('completed');
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'task-checkbox';
+        checkbox.checked = completed;
+        checkbox.onchange = () => {
+            li.classList.toggle('completed', checkbox.checked);
+            saveData();
+        };
+
+        const span = document.createElement('span');
+        span.className = 'task-text';
+        span.textContent = text;
+
         const deleteBtn = document.createElement('span');
+        deleteBtn.className = 'delete-btn';
         deleteBtn.textContent = '✕';
-        deleteBtn.style.cursor = 'pointer';
-        deleteBtn.style.marginLeft = '10px';
-        deleteBtn.style.color = '#ff453a';
         deleteBtn.onclick = (e) => {
             e.stopPropagation();
             li.remove();
             saveData();
         };
 
+        li.appendChild(checkbox);
+        li.appendChild(span);
         li.appendChild(deleteBtn);
+        return li;
+    }
+
+    function addTodo() {
+        const text = todoInput.value.trim();
+        if (text === '') return;
+
+        const li = createTodoItem(text);
         todoList.appendChild(li);
         todoInput.value = '';
         saveData();
@@ -73,7 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveData() {
         const todos = [];
         document.querySelectorAll('#todo-list li').forEach(li => {
-            todos.push(li.firstChild.textContent);
+            todos.push({
+                text: li.querySelector('.task-text').textContent,
+                completed: li.querySelector('.task-checkbox').checked
+            });
         });
 
         const priorities = [];
@@ -91,21 +114,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadData() {
-        const data = JSON.parse(localStorage.getItem('musk-timebox-data'));
-        if (!data) return;
+        const rawData = localStorage.getItem('musk-timebox-data');
+        if (!rawData) return;
 
-        data.todos.forEach(text => {
-            const li = document.createElement('li');
-            li.textContent = text;
-            const deleteBtn = document.createElement('span');
-            deleteBtn.textContent = '✕';
-            deleteBtn.style.color = '#ff453a';
-            deleteBtn.onclick = (e) => {
-                e.stopPropagation();
-                li.remove();
-                saveData();
-            };
-            li.appendChild(deleteBtn);
+        const data = JSON.parse(rawData);
+
+        todoList.innerHTML = '';
+        data.todos.forEach(todo => {
+            // Check if todo is object (new format) or string (old format)
+            const text = typeof todo === 'string' ? todo : todo.text;
+            const completed = typeof todo === 'string' ? false : todo.completed;
+            const li = createTodoItem(text, completed);
             todoList.appendChild(li);
         });
 
@@ -124,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Auto-save on input
     document.addEventListener('input', (e) => {
-        if (e.target.tagName === 'INPUT') {
+        if (e.target.classList.contains('slot-input') || e.target.parentElement.classList.contains('priorities')) {
             saveData();
         }
     });

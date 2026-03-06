@@ -19,7 +19,7 @@
 <body>
     <div class="app-container">
         <header>
-            <h1>TIME BOX PLANNER</h1>
+            <h1>TIME BOX PLANNER <small style="font-size: 0.8rem; vertical-align: middle; opacity: 0.5;">v2</small></h1>
             <p class="subtitle">Inspired by Elon Musk's Productivity Method</p>
         </header>
 
@@ -66,8 +66,9 @@
             </div>
         </footer>
     </div>
-    <script src="main.js"></script>
+    <script src="main.js?v=2"></script>
     <script>
+        /*
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
@@ -75,6 +76,7 @@
                     .catch(err => console.log('SW Error: ', err));
             });
         }
+        */
     </script>
 </body>
 
