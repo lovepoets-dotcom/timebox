@@ -1,4 +1,4 @@
-const CACHE_NAME = 'timebox-v1';
+const CACHE_NAME = 'timebox-v2';
 const ASSETS = [
     './',
     './index.html',

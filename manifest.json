@@ -4,8 +4,8 @@
     "description": "Elon Musk inspired productivity time box planner",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0d0d0d",
-    "theme_color": "#007aff",
+    "background_color": "#000000",
+    "theme_color": "#bf5af2",
     "icons": [
         {
             "src": "icons/icon-192.png",
