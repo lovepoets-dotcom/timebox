@@ -1,9 +1,9 @@
-const CACHE_NAME = 'timebox-v5'; // 버전을 v5로 올림
+const CACHE_NAME = 'timebox-v6'; // 버전을 v6로 올림 (업데이트 유도)
 const ASSETS = [
     './',
     './index.html',
     './style.css?v=2',
-    './main.js',
+    './main.js?v=2',
     './manifest.json'
 ];
 
