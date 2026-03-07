@@ -1,4 +1,4 @@
-const CACHE_NAME = 'timebox-v6'; // 버전을 v6로 올림 (업데이트 유도)
+const CACHE_NAME = 'timebox-v7'; // 디자인 수정 반영을 위한 v7 업데이트
 const ASSETS = [
     './',
     './index.html',
