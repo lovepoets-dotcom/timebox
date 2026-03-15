@@ -9,9 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // State management
     let currentSelectedDate = new Date();
+    let isLoading = false;
 
     function formatDate(date) {
-        return date.toISOString().split('T')[0];
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     function updateDateDisplay() {
@@ -19,8 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loadData();
     }
 
-    // Initialize date
-    updateDateDisplay();
+    // Initialize date (Will be called after renderTimeSlots)
+    // updateDateDisplay();
 
     // Date navigation
     datePicker.addEventListener('change', (e) => {
@@ -74,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         timeSlotsContainer.appendChild(slot);
     }
 
-    renderTimeSlots();
+    // renderTimeSlots(); (Moved to end of DOMContentLoaded)
 
     // Add Todo Functionality
     function createTodoItem(text, completed = false) {
@@ -130,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function saveData() {
+        if (isLoading) return;
         const todos = [];
         document.querySelectorAll('#todo-list li').forEach(li => {
             todos.push({
@@ -168,11 +173,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Reset UI
+        isLoading = true;
         todoList.innerHTML = '';
         document.querySelectorAll('.priorities input').forEach(input => input.value = '');
         document.querySelectorAll('.slot-input').forEach(input => input.value = '');
 
-        if (!rawData) return;
+        if (!rawData) {
+            isLoading = false;
+            return;
+        }
 
         const data = JSON.parse(rawData);
 
@@ -201,7 +210,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.value = data.slots[input.dataset.time];
             }
         });
+        
+        isLoading = false;
     }
+
+    renderTimeSlots();
+    updateDateDisplay();
 
     // Auto-save for priorities
     document.querySelector('.priorities').addEventListener('input', (e) => {
